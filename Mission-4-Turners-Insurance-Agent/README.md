@@ -1,16 +1,178 @@
-# React + Vite
+<a id="readme-top"></a>
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+# Tina — Turners Insurance AI Consultant
 
-Currently, two official plugins are available:
+A conversational AI insurance consultant prototype for Turners New Zealand, developed as part of the Mission Ready full-stack development programme.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Tina asks customers questions about their vehicle and insurance needs, then recommends eligible insurance products. This is a **demonstration application**, not a system for purchasing or activating insurance cover.
 
-## React Compiler
+## Table of Contents
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- [About the Project](#about-the-project)
+- [Built With](#built-with)
+- [Getting Started](#getting-started)
+- [Usage](#usage)
+- [API](#api)
+- [Business Rules](#business-rules)
+- [Roadmap](#roadmap)
+- [Acknowledgements](#acknowledgements)
 
-## Expanding the Oxlint configuration
+## About the Project
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+The application provides a chat interface for an AI consultant named **Tina**. Tina seeks the customer's permission to begin, asks one question at a time, and adapts subsequent questions to the answers received. Once sufficient information is available, Tina recommends suitable insurance options and explains the reasoning.
+
+Key features:
+
+- Interactive React chat interface with conversation history
+- Google Gemini-powered responses through an Express backend
+- Context-aware, one-question-at-a-time consultation
+- Eligibility checks for the available insurance products
+- Structured API responses indicating whether the consultation is complete
+- Loading indicator, input focus, and error feedback
+- Markdown-formatted responses and clickable contact email links
+- Consultation completion message and automatic removal of the message form
+- Ability to reset and start a new consultation
+- Fallback Gemini models for certain temporary API failures
+
+The interface is styled to resemble Turners branding. This student prototype is not an official Turners service.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Built With
+
+- [React](https://react.dev/)
+- [Vite](https://vite.dev/)
+- [JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [CSS Modules](https://github.com/css-modules/css-modules)
+- [Node.js](https://nodejs.org/)
+- [Express](https://expressjs.com/)
+- [Google Gen AI SDK](https://www.npmjs.com/package/@google/genai)
+- [React Markdown](https://github.com/remarkjs/react-markdown)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- A Google Gemini API key
+
+### Installation
+
+1. Clone the repository:
+
+    ```bash
+    git clone <YOUR_REPOSITORY_URL>
+    cd <YOUR_REPOSITORY_DIRECTORY>
+    ```
+
+2. Install backend dependencies from the backend directory:
+
+    ```bash
+    cd backend
+    npm install
+    ```
+
+3. Create a `backend/.env` file containing:
+
+    ```dotenv
+    GEMINI_API_KEY=your_api_key_here
+    ```
+
+    **Never commit `.env` or your API key to Git.**
+
+4. Start the backend:
+
+    ```bash
+    node index.js
+    ```
+
+    The backend listens on `http://localhost:4000`.
+
+5. In a separate terminal, navigate to the frontend directory and install dependencies:
+
+    ```bash
+    cd <YOUR_FRONTEND_DIRECTORY>
+    npm install
+    npm run dev
+    ```
+
+6. Open the local URL displayed by Vite in your browser.
+
+> **Note:** Replace the repository and frontend-directory placeholders with the actual paths in your project. The current frontend expects the backend at `http://localhost:4000/api/tina`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Usage
+
+1. Start a consultation with Tina.
+2. Agree to answer questions about your vehicle and insurance needs.
+3. Answer each question as it appears.
+4. Review Tina's recommended eligible insurance products.
+5. Ask follow-up questions, or indicate that you are finished.
+6. Once the consultation ends, the input form disappears and the conversation remains visible until reset.
+
+Tina can provide Turners' contact details for customers who wish to enquire about arranging cover. She cannot issue a policy or activate insurance.
+
+## API
+
+### `POST /api/tina`
+
+Accepts a customer message and previous conversation history.
+
+**Example request:**
+
+```json
+{
+    "message": "I drive a 2021 Toyota Corolla.",
+    "history": [
+        {
+            "role": "model",
+            "parts": [{ "text": "What vehicle do you drive?" }]
+        }
+    ]
+}
+```
+
+**Example response structure:**
+
+```json
+{
+    "reply": "Thanks. What do you mainly use your Corolla for?",
+    "interviewComplete": false
+}
+```
+
+The `reply` is generated by Gemini and can vary. `interviewComplete` indicates whether the conversation has ended.
+
+The backend validates the incoming message, forwards the conversation to Gemini, and returns the structured response. It also handles certain Gemini service failures and attempts configured fallback models.
+
+## Business Rules
+
+Tina considers three products:
+
+| Insurance product                    | Eligibility rule                                         |
+| ------------------------------------ | -------------------------------------------------------- |
+| Mechanical Breakdown Insurance (MBI) | Not available for trucks or racing cars                  |
+| Comprehensive Car Insurance          | Only available for motor vehicles less than 10 years old |
+| Third Party Car Insurance            | Considered according to the customer's needs             |
+
+Tina must not recommend a product when the customer is ineligible. She must not invent insurance prices, policy terms, or claim that cover has been purchased.
+
+## Roadmap
+
+- [x] Build React chat interface
+- [x] Integrate Gemini through an Express API
+- [x] Add insurance eligibility rules
+- [x] Handle consultation completion and reset
+- [x] Add loading states and basic error handling
+- [ ] Containerise frontend and backend with Docker
+- [ ] Review deployment configuration and environment variables
+- [ ] Add automated tests as needed
+
+## Acknowledgements
+
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template) — README structure
+- [Turners](https://www.turners.co.nz/) — insurance consultation scenario and brand reference
+- [Google Gemini](https://ai.google.dev/) — generative AI integration
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
