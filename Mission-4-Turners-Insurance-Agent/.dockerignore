@@ -1,0 +1,8 @@
+node_modules
+dist
+# ^ when you do "npm run build" it usually creates a dist/ folder, but docker does this for you when you build. It will prevent docker from copying an existing local build.
+.env  
+#  ^ This is precautionary
+.env.* 
+#  ^ This is precautionary too, just for my learning. They don't do anything right now because my .env is in my backend, but it 
+backend
