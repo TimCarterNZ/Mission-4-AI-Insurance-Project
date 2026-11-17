@@ -1,6 +1,6 @@
 <a id="readme-top"></a>
 
-# Tina — Turners Insurance AI Consultant
+# Tina: The Turners Insurance AI Consultant
 
 A conversational AI insurance consultant prototype for Turners New Zealand, developed as part of the Mission Ready full-stack development programme.
 
